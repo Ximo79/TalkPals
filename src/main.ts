@@ -1,17 +1,16 @@
 import Phaser from 'phaser';
+import { GameScene } from './GameScene';
 
-// Crear juego sin escenas; las cargamos por import() para partir el bundle
-const game = new Phaser.Game({
+new Phaser.Game({
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
   pixelArt: true,
   physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
-  scene: []
-});
-
-// Code-splitting: carga diferida de la escena principal
-import('./GameScene').then(({ GameScene }) => {
-  // @ts-ignore
-  game.scene.add('GameScene', GameScene, true);
+  // Canvas responsivo
+  scale: {
+    mode: Phaser.Scale.FIT,
+    autoCenter: Phaser.Scale.CENTER_BOTH,
+    width: 1024,     // base lógica; se reescala al viewport
+    height: 576
+  },
+  scene: [GameScene]
 });
