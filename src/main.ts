@@ -5,12 +5,11 @@ new Phaser.Game({
   type: Phaser.AUTO,
   pixelArt: true,
   physics: { default: 'arcade', arcade: { gravity: { y: 0 } } },
-  // Canvas responsivo
   scale: {
     mode: Phaser.Scale.FIT,
     autoCenter: Phaser.Scale.CENTER_BOTH,
-    width: 1024,     // base lógica; se reescala al viewport
-    height: 576
+    width: 1280,   // base lógica; se adapta al viewport
+    height: 720
   },
   scene: [GameScene]
 });
