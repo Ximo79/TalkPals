@@ -9,12 +9,18 @@ export class GameScene extends Phaser.Scene {
   }
 
   preload() {
+    console.log('→ Preloading assets...')
     this.load.image('mapa', 'assets/map_1_court.png')
     this.load.image('breijo', 'assets/sprite_1_front.png')
   }
 
   create() {
+    this.cameras.main.setBackgroundColor('#1d1d1d')
+    console.log('→ Creating scene...')
+
     const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0).setScale(0.3)
+    console.log('→ Map dimensions:', fondo.width, fondo.height)
+
     const width = fondo.width * fondo.scaleX
     const height = fondo.height * fondo.scaleY
 
