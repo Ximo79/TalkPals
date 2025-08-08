@@ -10,8 +10,8 @@ export class GameScene extends Phaser.Scene {
 
   preload() {
     // Carga de imágenes desde la carpeta pública
-    this.load.image('mapa', '/assets/map_1_court.png')
-    this.load.image('breijo', '/assets/sprite_1_front.png')
+    this.load.image('mapa', 'public/assets/map_1_court.png')
+    this.load.image('breijo', 'public/assets/sprite_1_front.png')
   }
 
   create() {
