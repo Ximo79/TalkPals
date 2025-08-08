@@ -15,18 +15,27 @@ this.load.image('breijo', 'assets/sprite_1_front.png')
 
   }
 
-  create() {
-    // Agrega el fondo
-    const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0)
-    console.log('Tamaño del fondo:', fondo.width, fondo.height)
+create() {
+  // Fondo
+  const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0).setScale(1)
+  const width = fondo.width * fondo.scaleX
+  const height = fondo.height * fondo.scaleY
 
-    fondo.setScale(1)
+  // Mundo y cámara
+  this.physics.world.setBounds(0, 0, width, height)
+  this.cameras.main.setBounds(0, 0, width, height)
 
-    const width = fondo.width * fondo.scaleX
-    const height = fondo.height * fondo.scaleY
+  // Jugador con escala ajustada
+  this.player = this.physics.add.sprite(150, 150, 'breijo').setScale(0.25)
+  this.player.setCollideWorldBounds(true)
 
-    this.physics.world.setBounds(0, 0, width, height)
-    this.cameras.main.setBounds(0, 0, width, height)
+  // Cámara sigue al jugador
+  this.cameras.main.startFollow(this.player)
+
+  // Controles de teclado
+  this.cursors = this.input.keyboard.createCursorKeys()
+}
+
 
     // Crea el jugador
     this.player = this.physics.add.sprite(150, 150, 'breijo')
@@ -38,20 +47,20 @@ this.load.image('breijo', 'assets/sprite_1_front.png')
     this.cursors = this.input.keyboard.createCursorKeys()
   }
 
-  update() {
-    const speed = 200
-    this.player.setVelocity(0)
+ update() {
+  const speed = 200
+  this.player.setVelocity(0)
 
-    if (this.cursors.left?.isDown) {
-      this.player.setVelocityX(-speed)
-    } else if (this.cursors.right?.isDown) {
-      this.player.setVelocityX(speed)
-    }
+  if (this.cursors.left?.isDown) {
+    this.player.setVelocityX(-speed)
+  } else if (this.cursors.right?.isDown) {
+    this.player.setVelocityX(speed)
+  }
 
-    if (this.cursors.up?.isDown) {
-      this.player.setVelocityY(-speed)
-    } else if (this.cursors.down?.isDown) {
-      this.player.setVelocityY(speed)
-    }
+  if (this.cursors.up?.isDown) {
+    this.player.setVelocityY(-speed)
+  } else if (this.cursors.down?.isDown) {
+    this.player.setVelocityY(speed)
   }
 }
+
