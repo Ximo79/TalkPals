@@ -16,7 +16,7 @@ export class GameScene extends Phaser.Scene {
 
   create() {
     // Fondo
-    const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0).setScale(1);
+    const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0).setScale(3);
     const width = fondo.width * fondo.scaleX;
     const height = fondo.height * fondo.scaleY;
 
@@ -27,7 +27,7 @@ export class GameScene extends Phaser.Scene {
     // Jugador con escala ajustada
     this.player = this.physics.add.sprite(150, 150, 'breijo').setScale(0.25);
     this.player.setCollideWorldBounds(true);
-    this.player.setTint(0xff0000); // Rojo para visibilidad
+   
 
     // Cámara sigue al jugador
     this.cameras.main.startFollow(this.player);
