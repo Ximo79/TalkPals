@@ -8,10 +8,11 @@ export class GameScene extends Phaser.Scene {
     super('GameScene')
   }
 
-  preload() {
-    this.load.image('mapa', '../assets/map_1_court.png')
-    this.load.image('breijo', '../assets/sprite_1_front.png')
-  }
+preload() {
+  this.load.image('mapa', 'assets/map_1_court.png')
+  this.load.image('breijo', 'assets/sprite_1_front.png')
+}
+
 
   create() {
     const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0).setScale(0.3)
