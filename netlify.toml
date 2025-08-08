@@ -5,6 +5,7 @@
 [build.environment]
   NODE_VERSION = "20"
 
+# Redirección para SPA (Single Page Application)
 [[redirects]]
   from = "/*"
   to = "/index.html"
