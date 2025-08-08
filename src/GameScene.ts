@@ -14,21 +14,22 @@ preload() {
 }
 
 
-  create() {
-    const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0).setScale(0.3)
-    const width = fondo.width * fondo.scaleX
-    const height = fondo.height * fondo.scaleY
+create() {
+  const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0)
+  console.log('Fondo cargado con tamaño:', fondo.width, fondo.height)
+  fondo.setScale(1)
 
-    this.physics.world.setBounds(0, 0, width, height)
+  this.player = this.physics.add.sprite(100, 100, 'breijo')
+  this.player.setCollideWorldBounds(true)
 
-    this.player = this.physics.add.sprite(100, 100, 'breijo')
-    this.player.setCollideWorldBounds(true)
+  this.cameras.main.startFollow(this.player)
+  this.cameras.main.setBounds(0, 0, fondo.width, fondo.height)
 
-    this.cameras.main.startFollow(this.player)
-    this.cameras.main.setBounds(0, 0, width, height)
+  this.physics.world.setBounds(0, 0, fondo.width, fondo.height)
 
-    this.cursors = this.input.keyboard.createCursorKeys()
-  }
+  this.cursors = this.input.keyboard.createCursorKeys()
+}
+
 
   update() {
     const speed = 200
