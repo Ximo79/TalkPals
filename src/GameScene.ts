@@ -8,28 +8,40 @@ export class GameScene extends Phaser.Scene {
     super('GameScene')
   }
 
-preload() {
-  this.load.image('mapa', 'assets/map_1_court.png')
-  this.load.image('breijo', 'assets/sprite_1_front.png')
-}
+  preload() {
+    // Carga de imágenes
+    this.load.image('mapa', 'assets/map_1_court.png')
+    this.load.image('breijo', 'assets/sprite_1_front.png')
+  }
 
+  create() {
+    // Agrega el fondo
+    const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0)
 
-create() {
-  const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0)
-  console.log('Fondo cargado con tamaño:', fondo.width, fondo.height)
-  fondo.setScale(1)
+    // Log para comprobar si se carga correctamente
+    console.log('Tamaño del fondo:', fondo.width, fondo.height)
 
-  this.player = this.physics.add.sprite(100, 100, 'breijo')
-  this.player.setCollideWorldBounds(true)
+    // Ajuste del tamaño del fondo si quieres escalarlo
+    fondo.setScale(1)
 
-  this.cameras.main.startFollow(this.player)
-  this.cameras.main.setBounds(0, 0, fondo.width, fondo.height)
+    const width = fondo.width * fondo.scaleX
+    const height = fondo.height * fondo.scaleY
 
-  this.physics.world.setBounds(0, 0, fondo.width, fondo.height)
+    // Define los límites del mundo y de la cámara
+    this.physics.world.setBounds(0, 0, width, height)
+    this.cameras.main.setBounds(0, 0, width, height)
 
-  this.cursors = this.input.keyboard.createCursorKeys()
-}
+    // Agrega al jugador
+    this.player = this.physics.add.sprite(150, 150, 'breijo')
+    this.player.setCollideWorldBounds(true)
+    this.player.setTint(0xff0000) // Tinte rojo para visibilidad
 
+    // Que la cámara siga al jugador
+    this.cameras.main.startFollow(this.player)
+
+    // Controles de teclado
+    this.cursors = this.input.keyboard.createCursorKeys()
+  }
 
   update() {
     const speed = 200
