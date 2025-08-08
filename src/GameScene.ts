@@ -14,27 +14,27 @@ export class GameScene extends Phaser.Scene {
     this.load.image('breijo', 'assets/sprite_1_front.png');
   }
 
-  create() {
-    // Fondo
-    const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0).setScale(3);
-    const width = fondo.width * fondo.scaleX;
-    const height = fondo.height * fondo.scaleY;
+ create() {
+  // Cargar fondo y escalarlo
+  const fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0).setScale(3); // Ajusta si es necesario
+  const width = fondo.width * fondo.scaleX;
+  const height = fondo.height * fondo.scaleY;
 
-    // Mundo y cámara
-    this.physics.world.setBounds(0, 0, width, height);
-    this.cameras.main.setBounds(0, 0, width, height);
+  // Definir límites del mundo
+  this.physics.world.setBounds(0, 0, width, height);
+  this.cameras.main.setBounds(0, 0, width, height);
 
-    // Jugador con escala ajustada
-    this.player = this.physics.add.sprite(150, 150, 'breijo').setScale(0.25);
-    this.player.setCollideWorldBounds(true);
-   
+  // Sprite del jugador con escala reducida
+  this.player = this.physics.add.sprite(150, 150, 'breijo').setScale(0.2);
+  this.player.setCollideWorldBounds(true);
 
-    // Cámara sigue al jugador
-    this.cameras.main.startFollow(this.player);
+  // Cámara sigue al jugador
+  this.cameras.main.startFollow(this.player);
 
-    // Controles de teclado
-    this.cursors = this.input.keyboard.createCursorKeys();
-  }
+  // Controles
+  this.cursors = this.input.keyboard.createCursorKeys();
+}
+
 
   update() {
     const speed = 200;
