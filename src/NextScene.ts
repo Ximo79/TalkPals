@@ -78,13 +78,13 @@ export class NextScene extends Phaser.Scene {
     body.updateFromGameObject(this.doorZone);
   }
 
-  private tryBack() {
-    this.prompt.setVisible(true);
-    if (Phaser.Input.Keyboard.JustDown(this.space)) {
-      this.scene.start('GameScene', { spawn: 'fromMap2' });
-    }
+private tryBack() {
+  this.prompt.setVisible(true);
+  if (Phaser.Input.Keyboard.JustDown(this.space)) {
+    this.scene.stop();                              // corta esta escena
+    this.scene.start('GameScene', { spawn: 'fromMap2' }); // vuelve al mapa 1
   }
-
+}
   update() {
     const speed = 220;
     this.player.setVelocity(0);
