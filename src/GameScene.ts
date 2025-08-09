@@ -14,7 +14,7 @@ export class GameScene extends Phaser.Scene {
   private readonly MARGIN = 0; // sin margen
 
   preload() {
-    this.load.image('mapa', 'assets/map_1_court.png');
+    this.load.image('mapa', 'assets/map_1_gym.png');
     this.load.image('breijo', 'assets/sprite_1_front.png');
   }
 
