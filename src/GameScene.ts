@@ -7,15 +7,16 @@ export class GameScene extends Phaser.Scene {
   private doorZone!: Phaser.GameObjects.Rectangle;
   private prompt!: Phaser.GameObjects.Text;
   private space!: Phaser.Input.Keyboard.Key;
+
   private bounds = { x: 0, y: 0, w: 0, h: 0 };
-  private readonly MARGIN = 16;
+  private readonly MARGIN = 0;          // ← sin margen para llegar al borde
 
   preload() {
     this.load.image('mapa', 'assets/map_1_court.png');
     this.load.image('breijo', 'assets/sprite_1_front.png');
   }
 
-  create() {
+  create(data: { spawn?: 'fromMap2' } = {}) {
     this.fondo = this.add.image(0, 0, 'mapa').setOrigin(0, 0);
     this.player = this.physics.add.sprite(0, 0, 'breijo');
     this.player.setCollideWorldBounds(false);
@@ -24,25 +25,23 @@ export class GameScene extends Phaser.Scene {
     this.space = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     this.cameras.main.setScroll(0, 0);
 
-    // puerta visible mientras pruebas (alfa 0 cuando funcione)
-    this.doorZone = this.add.rectangle(0, 0, 80, 120, 0x00ff00, 0.15).setOrigin(0.5);
+    // puerta (invisible, solo colisión)
+    this.doorZone = this.add.rectangle(0, 0, 74, 120, 0x00ff00, 0).setOrigin(0.5);
     this.physics.add.existing(this.doorZone, true);
     this.prompt = this.add.text(0, 0, 'Pulsa ESPACIO para salir', {
       font: '18px Arial', color: '#fff', backgroundColor: '#000'
     }).setOrigin(0.5).setVisible(false);
 
-    // overlap: callback único
     this.physics.add.overlap(this.player, this.doorZone, this.tryExit, undefined, this);
 
-    this.layout();
-    this.scale.on('resize', () => this.layout());
+    this.layout(data.spawn);
+    this.scale.on('resize', () => this.layout(data.spawn));
   }
 
-  private layout() {
+  private layout(spawn?: 'fromMap2') {
     const W = this.scale.width, H = this.scale.height;
-    const maxW = W - this.MARGIN * 2;
-    const maxH = H - this.MARGIN * 2;
-    const s = Math.min(maxW / this.fondo.width, maxH / this.fondo.height);
+    const s = Math.min((W - this.MARGIN * 2) / this.fondo.width,
+                       (H - this.MARGIN * 2) / this.fondo.height);
     this.fondo.setScale(s);
 
     const mapW = this.fondo.width * s;
@@ -58,17 +57,23 @@ export class GameScene extends Phaser.Scene {
     const pScale = Phaser.Math.Clamp((mapH * 0.14) / baseH, 0.06, 0.7);
     this.player.setScale(pScale);
 
-    if (this.player.x === 0 && this.player.y === 0) {
+    // spawn cerca de la puerta (si venimos de map2) o centro bajo por defecto
+    if (spawn === 'fromMap2') {
+      const px = mapX + mapW - 120;           // un poco a la izquierda de la puerta
+      const py = mapY + mapH * 0.72;
+      this.player.setPosition(px, py);
+    } else if (this.player.x === 0 && this.player.y === 0) {
       this.player.setPosition(mapX + mapW / 2, mapY + mapH * 0.75);
     }
 
-    // colocar puerta y texto
-    const doorX = mapX + mapW - 50;
-    const doorY = mapY + mapH * 0.55;
+    // --- PUERTA MAPA 1: arriba‑derecha ---
+    // Ajusta estos offsets para cuadrar con tu imagen de puerta
+    const doorX = mapX + mapW - 60;    // 60 px desde el borde derecho
+    const doorY = mapY + 130;          // 130 px desde el borde superior
     this.doorZone.setPosition(doorX, doorY);
     this.prompt.setPosition(doorX, doorY - 70);
 
-    // actualizar cuerpo estático tras mover
+    // actualizar cuerpo estático
     const body = this.doorZone.body as Phaser.Physics.Arcade.StaticBody;
     body.setSize(this.doorZone.displayWidth, this.doorZone.displayHeight);
     body.updateFromGameObject(this.doorZone);
@@ -77,7 +82,7 @@ export class GameScene extends Phaser.Scene {
   private tryExit() {
     this.prompt.setVisible(true);
     if (Phaser.Input.Keyboard.JustDown(this.space)) {
-      this.scene.start('NextScene');
+      this.scene.start('NextScene', { spawn: 'fromMap1' });
     }
   }
 
@@ -89,19 +94,13 @@ export class GameScene extends Phaser.Scene {
     if (this.cursors.up?.isDown)    this.player.setVelocityY(-speed);
     else if (this.cursors.down?.isDown)  this.player.setVelocityY(speed);
 
-    // ocultar prompt si no hay overlap este frame
-    if (!this.physics.world.overlap(this.player, this.doorZone)) {
-      this.prompt.setVisible(false);
-    }
+    // ocultar prompt si este frame no hay solape
+    if (!this.physics.world.overlap(this.player, this.doorZone)) this.prompt.setVisible(false);
 
-    // límites del mapa
+    // límites exactos del mapa
     const halfW = this.player.displayWidth * 0.5;
     const halfH = this.player.displayHeight * 0.5;
-    const minX = this.bounds.x + halfW;
-    const maxX = this.bounds.x + this.bounds.w - halfW;
-    const minY = this.bounds.y + halfH;
-    const maxY = this.bounds.y + this.bounds.h - halfH;
-    this.player.x = Phaser.Math.Clamp(this.player.x, minX, maxX);
-    this.player.y = Phaser.Math.Clamp(this.player.y, minY, maxY);
+    this.player.x = Phaser.Math.Clamp(this.player.x, this.bounds.x + halfW, this.bounds.x + this.bounds.w - halfW);
+    this.player.y = Phaser.Math.Clamp(this.player.y, this.bounds.y + halfH, this.bounds.y + this.bounds.h - halfH);
   }
 }
